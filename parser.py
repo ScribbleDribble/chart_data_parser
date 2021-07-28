@@ -13,12 +13,13 @@ class DataFinder:
 	def __init__(self, xml_files):
 		self.xml_files = xml_files
 
+
 		for fileid, file in enumerate(xml_files):
 			self.xml_cleanup(file, fileid)
 			col1, col2 = self.find_n_recoverytests_tabledata(fileid)
-			self.export_to_excel(col1, col2)
+			self.export_to_excel(col1, col2, fileid)
 			os.remove(f"temp{fileid}.xml")
-			
+			print(f"Datasets processed: {fileid+1}/{len(self.xml_files)}")
 
 	@staticmethod
 	def xml_cleanup(fp, fileid):
@@ -86,13 +87,12 @@ class DataFinder:
 		return name_col, n_tests_col
 
 
-	def export_to_excel(self, col1, col2):
+	def export_to_excel(self, col1, col2, fileid):
 		table = pd.DataFrame({'name':col1, 'n recovery tests':col2})
-		print(table)
-		table.to_excel("bias data points.xlsx")
+		print("-->Exporting table to Excel")
+		table.to_excel(f"Bias data points {fileid+1}.xlsx")
 
 
-# print(os.listdir(os.getcwd()))
 files = []
 
 for file in os.listdir(os.getcwd()):
